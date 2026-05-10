@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canım Anam</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ffe6f2; /* Tatlı bir pembe arka plan */
+            overflow: hidden;
+            font-family: 'Trebuchet MS', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .message-box {
+            text-align: center;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.3);
+        }
+        h1 {
+            color: #d81b60;
+            font-size: 3rem;
+            margin: 0 0 10px 0;
+        }
+        p {
+            color: #c2185b;
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: bold;
+        }
+        .emoji {
+            position: absolute;
+            bottom: -50px;
+            animation: floatUp linear infinite;
+            opacity: 0.9;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-110vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="message-box">
+        <h1>👑 Evin Kraliçesi 👑</h1>
+        <p>Canım Anam, Anneler Günün Kutlu Olsun!<br>Sen her şeyin en kralına layıksın ❤️</p>
+    </div>
+
+    <script>
+        function createEmoji() {
+            // Uçuşacak emojiler
+            const emojis = ['🌸', '💖', '🌷', '🌺', '❤️', '🌹', '✨', '💐'];
+            const emoji = document.createElement('div');
+            emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.classList.add('emoji');
+            
+            // Rastgele sağ/sol konumu ve animasyon süresi
+            emoji.style.left = Math.random() * 100 + 'vw';
+            emoji.style.animationDuration = Math.random() * 3 + 4 + 's'; // 4 ile 7 saniye arası
+            emoji.style.fontSize = Math.random() * 20 + 20 + 'px'; // 20px ile 40px arası boyut
+            
+            document.body.appendChild(emoji);
+            
+            // Ekrandan çıkınca DOM'dan temizle ki kasmasın
+            setTimeout(() => {
+                emoji.remove();
+            }, 7000);
+        }
+
+        // Her 200 milisaniyede bir yeni emoji fırlat
+        setInterval(createEmoji, 200);
+    </script>
+</body>
+</html>
