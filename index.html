@@ -1,82 +1,417 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canım Anam</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #ffe6f2; /* Tatlı bir pembe arka plan */
-            overflow: hidden;
-            font-family: 'Trebuchet MS', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .message-box {
-            text-align: center;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.85);
-            padding: 50px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.3);
-        }
-        h1 {
-            color: #d81b60;
-            font-size: 3rem;
-            margin: 0 0 10px 0;
-        }
-        p {
-            color: #c2185b;
-            font-size: 1.5rem;
-            margin: 0;
-            font-weight: bold;
-        }
-        .emoji {
-            position: absolute;
-            bottom: -50px;
-            animation: floatUp linear infinite;
-            opacity: 0.9;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); }
-            100% { transform: translateY(-110vh) rotate(360deg); }
-        }
-    </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anneler Günü 💌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=Great+Vibes&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --pink-bg-a: #ffd6e7;
+      --pink-bg-b: #ffaed3;
+      --rose:      #c2185b;
+      --rose-mid:  #e91e8c;
+      --blush:     #f8bbd0;
+      --petal:     #fce4ec;
+      --glass:     rgba(255,255,255,.32);
+      --glass-b:   rgba(255,255,255,.6);
+    }
+
+    html, body {
+      width:100%; height:100%;
+      overflow:hidden;
+    }
+
+    body {
+      display:flex; align-items:center; justify-content:center;
+      min-height:100vh;
+      background: linear-gradient(145deg,#ffe0ec 0%,#ffd0e4 25%,#ffb8d8 55%,#ffc8e0 80%,#ffdaed 100%);
+      font-family:'Cormorant Garamond',serif;
+      position:relative;
+    }
+
+    /* ── mesh glow ───────────────────────── */
+    body::before {
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+      background:
+        radial-gradient(ellipse 65% 55% at 15% 25%, rgba(255,180,210,.5) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 85% 75%, rgba(255,100,160,.3) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 35% at 60% 8%,  rgba(255,220,238,.6) 0%, transparent 70%);
+      animation: meshPulse 12s ease-in-out infinite alternate;
+    }
+    @keyframes meshPulse {
+      from { opacity:.7; transform:scale(1); }
+      to   { opacity:1;  transform:scale(1.07); }
+    }
+
+    /* ── particles ───────────────────────── */
+    #particles { position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:1; }
+    .p {
+      position:absolute; bottom:-80px; line-height:1;
+      animation:floatUp linear infinite; will-change:transform,opacity;
+    }
+    @keyframes floatUp {
+      0%   { transform:translateY(0)      translateX(0)          rotate(0deg);   opacity:0; }
+      6%   { opacity:var(--op); }
+      50%  { transform:translateY(-52vh)  translateX(var(--sx))  rotate(180deg); }
+      92%  { opacity:var(--op); }
+      100% { transform:translateY(-112vh) translateX(var(--ex))  rotate(360deg); opacity:0; }
+    }
+
+    /* ════════════════════════════════════════
+       SCENE WRAPPER
+    ════════════════════════════════════════ */
+    .scene {
+      position:relative; z-index:10;
+      width: clamp(220px, 72vw, 360px);
+      height: clamp(160px, 52vw, 260px);
+      perspective: 1200px;
+    }
+
+    /* ════════════════════════════════════════
+       ENVELOPE
+    ════════════════════════════════════════ */
+    .envelope {
+      position:absolute; inset:0;
+      cursor:pointer;
+      animation:envBreath 2.8s ease-in-out infinite;
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .envelope.hidden { opacity:0; pointer-events:none; transform:scale(.7); }
+
+    @keyframes envBreath {
+      0%,100% { transform:scale(1) translateY(0);   filter:drop-shadow(0 8px 28px rgba(194,24,91,.35)); }
+      50%      { transform:scale(1.045) translateY(-6px); filter:drop-shadow(0 16px 40px rgba(194,24,91,.55)); }
+    }
+    .envelope.hidden { animation:none; }
+
+    .env-svg { width:100%; height:100%; overflow:visible; }
+
+    /* ── open-me badge ── */
+    .open-badge {
+      position:absolute; bottom:-38px; left:50%; transform:translateX(-50%);
+      background:linear-gradient(135deg, var(--rose), var(--rose-mid));
+      color:#fff;
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(.75rem,2.5vw,.95rem);
+      font-style:italic; font-weight:400; letter-spacing:.07em;
+      padding:.32em 1.1em;
+      border-radius:999px;
+      box-shadow:0 4px 16px rgba(194,24,91,.4);
+      white-space:nowrap;
+      animation:badgeBounce 2.8s ease-in-out infinite;
+      user-select:none;
+    }
+    @keyframes badgeBounce {
+      0%,100% { transform:translateX(-50%) translateY(0); }
+      50%      { transform:translateX(-50%) translateY(-5px); }
+    }
+
+    /* ════════════════════════════════════════
+       LETTER CARD
+    ════════════════════════════════════════ */
+    .letter-wrap {
+      position:fixed; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      z-index:20;
+      pointer-events:none;
+      opacity:0;
+      transition: opacity .5s ease;
+    }
+    .letter-wrap.open {
+      opacity:1; pointer-events:all;
+    }
+
+    .letter-card {
+      position:relative;
+      width: clamp(290px, 88vw, 520px);
+      max-height: 88vh;
+      background: linear-gradient(160deg, #fff8fb 0%, #fff0f5 50%, #fce8f0 100%);
+      border-radius: 18px 18px 4px 4px;
+      padding: clamp(1.8rem,5vw,3rem) clamp(1.6rem,5vw,2.8rem) clamp(1.6rem,4vw,2.4rem);
+      box-shadow:
+        0 24px 80px rgba(180,30,80,.28),
+        0 4px 20px rgba(180,30,80,.16),
+        inset 0 1px 0 rgba(255,255,255,.9);
+      overflow-y:auto;
+      overflow-x:hidden;
+      transform: scale(.6) translateY(60px) rotateX(12deg);
+      transition: transform .55s cubic-bezier(.22,1,.36,1), opacity .45s ease;
+      opacity:0;
+
+      /* paper line texture */
+      background-image:
+        linear-gradient(160deg, #fff8fb 0%, #fff0f5 50%, #fce8f0 100%),
+        repeating-linear-gradient(transparent, transparent 31px, rgba(210,100,150,.08) 31px, rgba(210,100,150,.08) 32px);
+      background-blend-mode: normal;
+    }
+    .letter-wrap.open .letter-card {
+      transform: scale(1) translateY(0) rotateX(0deg);
+      opacity:1;
+    }
+
+    /* top torn edge effect */
+    .letter-card::before {
+      content:'';
+      position:absolute; top:0; left:0; right:0; height:18px;
+      background:linear-gradient(135deg, var(--rose) 0%, var(--rose-mid) 60%, #ff6eb4 100%);
+      border-radius:18px 18px 0 0;
+    }
+
+    /* decorative wax-seal */
+    .seal {
+      position:absolute; top:-22px; left:50%; transform:translateX(-50%);
+      width:46px; height:46px;
+      background:radial-gradient(circle at 38% 35%, #ff6eb4, var(--rose));
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.3rem;
+      box-shadow: 0 4px 16px rgba(194,24,91,.5), inset 0 1px 3px rgba(255,255,255,.4);
+      border:2.5px solid rgba(255,255,255,.7);
+    }
+
+    .letter-header {
+      margin-top:1.2rem;
+      text-align:center;
+      margin-bottom:1rem;
+    }
+    .letter-header .crown { font-size:clamp(1.6rem,5vw,2.2rem); display:block; margin-bottom:.3rem; }
+    .letter-header h2 {
+      font-family:'Great Vibes',cursive;
+      font-size:clamp(2rem,7vw,3rem);
+      background:linear-gradient(135deg,var(--rose),var(--rose-mid),#ff6eb4);
+      -webkit-background-clip:text; background-clip:text;
+      -webkit-text-fill-color:transparent;
+      filter:drop-shadow(0 2px 6px rgba(194,24,91,.2));
+      line-height:1.1;
+    }
+
+    .letter-divider {
+      display:flex; align-items:center; gap:.5rem;
+      margin:.6rem 0 1.1rem;
+    }
+    .letter-divider span.line {
+      flex:1; height:1px;
+      background:linear-gradient(90deg,transparent,rgba(194,24,91,.35),transparent);
+    }
+    .letter-divider span.dot { font-size:.85rem; opacity:.7; }
+
+    .letter-body {
+      font-family:'Dancing Script',cursive;
+      font-size:clamp(1.05rem,3.5vw,1.28rem);
+      font-weight:500;
+      color:#6b1a3a;
+      line-height:1.85;
+      letter-spacing:.01em;
+      text-align:left;
+    }
+    .letter-body .line { display:block; margin-bottom:.1em; }
+
+    .letter-footer {
+      margin-top:1.2rem;
+      text-align:right;
+      font-family:'Great Vibes',cursive;
+      font-size:clamp(1.2rem,4vw,1.6rem);
+      color:var(--rose);
+      opacity:.8;
+    }
+
+    .letter-emojis {
+      text-align:center;
+      font-size:clamp(1.1rem,3.5vw,1.5rem);
+      letter-spacing:.18em;
+      margin-top:.9rem;
+      opacity:.85;
+    }
+
+    /* close button */
+    .close-btn {
+      position:absolute; top:14px; right:16px;
+      width:34px; height:34px;
+      border-radius:50%;
+      border:none; cursor:pointer;
+      background:rgba(194,24,91,.12);
+      color:var(--rose);
+      font-size:1rem; font-weight:700; line-height:1;
+      display:flex; align-items:center; justify-content:center;
+      transition:background .2s, transform .2s;
+      backdrop-filter:blur(6px);
+    }
+    .close-btn:hover { background:rgba(194,24,91,.25); transform:scale(1.1); }
+
+    .env-heart {
+      transform-origin: 184px 145px;
+      animation: heartbeat 1.3s ease-in-out infinite;
+    }
+    @keyframes heartbeat {
+      0%,100% { transform:scale(1);    }
+      14%      { transform:scale(1.22); }
+      28%      { transform:scale(1);    }
+      42%      { transform:scale(1.14); }
+      56%      { transform:scale(1);    }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="message-box">
-        <h1>👑 Evin Kraliçesi 👑</h1>
-        <p>Canım Anam, Anneler Günün Kutlu Olsun!<br>Sen her şeyin en kralına layıksın ❤️</p>
+<div id="particles"></div>
+
+<!-- ── ENVELOPE ─────────────────────────── -->
+<div class="scene" id="envScene" onclick="openLetter()">
+  <div class="envelope" id="envelope">
+    <svg class="env-svg" viewBox="0 0 360 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="envBody" x1="0" y1="0" x2="360" y2="260" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"  stop-color="#fff0f5"/>
+          <stop offset="100%" stop-color="#ffd6e7"/>
+        </linearGradient>
+        <linearGradient id="envFlap" x1="0" y1="0" x2="360" y2="140" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"  stop-color="#ffb3ce"/>
+          <stop offset="100%" stop-color="#ff85b0"/>
+        </linearGradient>
+        <linearGradient id="envBottom" x1="0" y1="260" x2="360" y2="100" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"  stop-color="#ffc4de"/>
+          <stop offset="100%" stop-color="#ffe0ef"/>
+        </linearGradient>
+        <filter id="envShadow">
+          <feDropShadow dx="0" dy="6" stdDeviation="14" flood-color="rgba(194,24,91,.3)"/>
+        </filter>
+      </defs>
+
+      <!-- envelope body -->
+      <rect x="4" y="4" width="352" height="252" rx="18" ry="18" fill="url(#envBody)" filter="url(#envShadow)"/>
+      <rect x="4" y="4" width="352" height="252" rx="18" ry="18" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+
+      <!-- bottom triangle fold -->
+      <path d="M4 252 Q4 256 22 256 L338 256 Q356 256 356 252 L184 148 Z" fill="url(#envBottom)" opacity=".75"/>
+
+      <!-- left triangle fold -->
+      <path d="M4 4 L4 252 L184 148 Z" fill="rgba(255,160,200,.22)"/>
+
+      <!-- right triangle fold -->
+      <path d="M356 4 L356 252 L184 148 Z" fill="rgba(255,160,200,.15)"/>
+
+      <!-- top flap (closed) -->
+      <path d="M4 4 Q4 4 22 4 L338 4 Q356 4 356 4 L184 110 Z" fill="url(#envFlap)" opacity=".92"/>
+      <path d="M4 4 L184 110 L356 4" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1"/>
+
+      <!-- heart seal -->
+      <defs>
+        <radialGradient id="heartGrad" cx="42%" cy="35%" r="60%">
+          <stop offset="0%"   stop-color="#ff6eb4"/>
+          <stop offset="55%"  stop-color="#e91e8c"/>
+          <stop offset="100%" stop-color="#ad1457"/>
+        </radialGradient>
+        <filter id="heartGlow">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- soft halo behind heart -->
+      <ellipse cx="184" cy="150" rx="34" ry="30" fill="rgba(233,30,140,.18)"/>
+      <!-- heart path centred at 184,150, ~52px wide -->
+      <path d="M184 168
+               C184 168 158 153 158 137
+               C158 127 166 120 175 122
+               C179 123 182 126 184 129
+               C186 126 189 123 193 122
+               C202 120 210 127 210 137
+               C210 153 184 168 184 168 Z"
+            fill="url(#heartGrad)"
+            stroke="rgba(255,255,255,.7)" stroke-width="1.8"
+            filter="url(#heartGlow)"
+            class="env-heart"/>
+      <!-- inner shine -->
+      <path d="M172 129 C170 133 169 137 171 141" stroke="rgba(255,255,255,.55)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <!-- tiny sparkles around heart -->
+      <circle cx="154" cy="128" r="2.2" fill="rgba(255,255,255,.8)"/>
+      <circle cx="214" cy="132" r="1.8" fill="rgba(255,255,255,.7)"/>
+      <circle cx="184" cy="112" r="2"   fill="rgba(255,180,210,.9)"/>
+      <circle cx="162" cy="162" r="1.5" fill="rgba(255,255,255,.6)"/>
+      <circle cx="206" cy="160" r="1.5" fill="rgba(255,255,255,.6)"/>
+    </svg>
+
+    <div class="open-badge">💌 Aç beni</div>
+  </div>
+</div>
+
+<!-- ── LETTER ──────────────────────────── -->
+<div class="letter-wrap" id="letterWrap">
+  <div class="letter-card" id="letterCard">
+    <div class="seal">👑</div>
+    <button class="close-btn" onclick="closeLetter()">✕</button>
+
+    <div class="letter-header">
+      <h2>Evin Kraliçesi</h2>
     </div>
 
-    <script>
-        function createEmoji() {
-            // Uçuşacak emojiler
-            const emojis = ['🌸', '💖', '🌷', '🌺', '❤️', '🌹', '✨', '💐'];
-            const emoji = document.createElement('div');
-            emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-            emoji.classList.add('emoji');
-            
-            // Rastgele sağ/sol konumu ve animasyon süresi
-            emoji.style.left = Math.random() * 100 + 'vw';
-            emoji.style.animationDuration = Math.random() * 3 + 4 + 's'; // 4 ile 7 saniye arası
-            emoji.style.fontSize = Math.random() * 20 + 20 + 'px'; // 20px ile 40px arası boyut
-            
-            document.body.appendChild(emoji);
-            
-            // Ekrandan çıkınca DOM'dan temizle ki kasmasın
-            setTimeout(() => {
-                emoji.remove();
-            }, 7000);
-        }
+    <div class="letter-divider">
+      <span class="line"></span>
+      <span class="dot">🌸</span>
+      <span class="dot">💖</span>
+      <span class="dot">🌸</span>
+      <span class="line"></span>
+    </div>
 
-        // Her 200 milisaniyede bir yeni emoji fırlat
-        setInterval(createEmoji, 200);
-    </script>
+    <div class="letter-body">
+      <span class="line">Evin kraliçesi, başımın tacı canım anam!</span>
+      <span class="line">&nbsp;</span>
+      <span class="line">Anneler günün kutlu olsun. Sana öyle efsane,</span>
+      <span class="line">şanına yakışır bi hediye patlattım ki görünce</span>
+      <span class="line">aklın duracak. ✨</span>
+      <span class="line">&nbsp;</span>
+      <span class="line">Sen her şeyin en kralına layıksın.</span>
+      <span class="line">Hakkın ödenmez sultanım,</span>
+      <span class="line">ellerinden öpüyorum! 🌹</span>
+    </div>
+
+    <div class="letter-footer">Seni seviyorum 💕</div>
+
+    <div class="letter-emojis">🌷&nbsp;🌸&nbsp;🌹&nbsp;💖&nbsp;🌺</div>
+  </div>
+</div>
+
+<script>
+  /* ── particles ──────────────────────────── */
+  (function(){
+    const c = document.getElementById('particles');
+    const em = ['🌸','🌷','🌹','🌺','❤️','💖','💗','💝','🌸','🌸','💌'];
+    for(let i=0;i<42;i++){
+      const el=document.createElement('span');
+      el.className='p';
+      el.textContent=em[Math.floor(Math.random()*em.length)];
+      const sz  = (.9+Math.random()*2.4).toFixed(2);
+      const op  = (.22+Math.random()*.72).toFixed(2);
+      const dur = (8+Math.random()*18).toFixed(1);
+      const del = (Math.random()*parseFloat(dur)).toFixed(1);
+      const lft = (Math.random()*98).toFixed(1);
+      const sx  = ((Math.random()-.5)*130).toFixed(0);
+      const ex  = ((Math.random()-.5)*110).toFixed(0);
+      el.style.cssText=`font-size:${sz}rem;left:${lft}vw;--op:${op};--sx:${sx}px;--ex:${ex}px;animation-duration:${dur}s;animation-delay:-${del}s;opacity:0;`;
+      c.appendChild(el);
+    }
+  })();
+
+  /* ── open / close ───────────────────────── */
+  const env   = document.getElementById('envelope');
+  const scene = document.getElementById('envScene');
+  const wrap  = document.getElementById('letterWrap');
+
+  function openLetter(){
+    env.classList.add('hidden');
+    scene.style.pointerEvents='none';
+    wrap.classList.add('open');
+  }
+
+  function closeLetter(){
+    wrap.classList.remove('open');
+    setTimeout(()=>{
+      env.classList.remove('hidden');
+      scene.style.pointerEvents='';
+    }, 480);
+  }
+</script>
 </body>
 </html>
